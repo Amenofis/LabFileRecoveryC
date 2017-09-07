@@ -29,13 +29,13 @@ typedef struct {
 
 typedef struct {
     int d_id;
-    int d_SOL;
-    int d_EOL;
+    int d_SOD;
+    int d_EOD;
 } Document;
 
 typedef struct Term {
     char * t_word;
-    Document ** document;
+    //Document ** document;
     struct Term * next;
 } Term;
 

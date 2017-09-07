@@ -52,4 +52,3 @@ viscosity is investigated .  it can be shown that this problem can again
 be treated by the boundary-layer approximation, the only novel feature
 being that the free stream has a constant vorticity .  the discussion
 here is restricted to two-dimensional incompressible steady flow .
-

@@ -1,51 +1,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <ctype.h>
-#include <assert.h>
 
 #include "constantes.h"
 #include "buscador.h"
+#include "utils.h"
+#include "terminos.h"
+#include "modelo.h"
 
-void chopN(char *str, size_t n)
-{
-    assert(n != 0 && str != 0);
-    size_t len = strlen(str);
-    if (n > len)
-        return;  // Or: n = len;
-    memmove(str, str+n, len - n + 1);
-}
-
-char *get_line(char * str) {
-    if (*str == '\0') return NULL;
-    while(*str == '\n')
-        str++;
-
-    char *s = str;
-    while(*str != '\n' && *str != '\0')
-        str++;
-
-    if (*str == '\n')
-        *str = '\0';
-
-    return s;
-}
-
-char *get_word(char * line){
-    if (*line == '\0') return NULL;
-    while(*line == ' '){
-        line++;
-    }
-    char *s = line;
-    while(*line != ' ' && *line != '\0'){
-        line++;
-    }
-    if (*line == ' ') {
-        *line = '\0';
-        //line+=1;
-    }
-    return s;
-}
 
 int main(int argc, char* argv[]) {
 
@@ -62,6 +24,7 @@ int main(int argc, char* argv[]) {
         printf("Menu\n");
         printf("1 Cargar StopWords\n");
         printf("2 Indexar Documentos\n");
+        printf("3 Mostrar Índice\n");
         printf("0 Salir\n");
         printf("Ingrese opción: ");
         scanf("%d", &op);
@@ -77,18 +40,30 @@ int main(int argc, char* argv[]) {
             case 2:
                 if (stopWords != NULL) {
                     printf("Crear Índice Invertido\n");
-                    createIndex(res_document_path, stopWords, &status);
-
+                    index = createIndex(res_document_path, stopWords, &status);
+                    if (index != NULL)
+                        printf("Index cargado exitosamente\n");
                 } else {
                     printf("No se puede indexar si no se han cargado las StopWords antes");
+                }
+                break;
+            case 3:
+                if (index !=NULL) {
+                    printTerms(index->i_terms);
                 }
                 break;
             case 0:
                 if (stopWords != NULL) {
                     destroyStopWords(&stopWords);
                     if (stopWords == NULL) {
-                        printf("\nStopWords destroyed\n");
+                        printf("- StopWords destroyed\n");
                     }
+                }
+                if (index != NULL) {
+                    destroyIndex(&index);
+
+                    if (index == NULL)
+                        printf("- Index destroyed\n");
                 }
                 printf("Salir\n");
                 break;
@@ -155,114 +130,77 @@ void destroyStopWords(StopWords **stopWords) {
     *stopWords = NULL;
 }
 
-int countDocumentFiles(char * pathToDocument) {
-    FILE *fp = fopen(pathToDocument, "r");
-    int docs = 0;
-    char buff[8];
-    if (fp == NULL)
-        return 0;
-    docs++;
-    while (fgets(buff, 8, fp)) {
-        int id;
-        if (sscanf(buff, ".I %d", &id) == 1) docs++;
-    }
-    fclose(fp);
-    return docs;
-}
-
-int countDocumentWords(char * pathToDocument) {
-    FILE *fp = fopen(pathToDocument, "r");
-    int words = 0;
-    char buff[8];
-    if (fp == NULL)
-        return 0;
-    words++;
-    while (fgets(buff, 8, fp)) {
-        char aux[5];
-    }
-    return words;
-}
-
-
-
-
 Index * createIndex(char * pathDocumentsFile, StopWords * sw, code * statusCode) {
     //int documentsCound = countDocumentFiles(pathDocumentsFile);
     //if (documentsCound > 0) {
-    //Index * ptrIndex = (Index*)malloc(sizeof(ptrIndex));
-    //if (ptrIndex) {
+    Index * ptrIndex = (Index*) malloc(sizeof(Index));
+    ptrIndex->i_terms = NULL;
+
+    if (ptrIndex != NULL) {
         FILE *fp = fopen(pathDocumentsFile, "r");
         char *aux, *buff, *line;
-        int i;
-        Bool isStopWord;
-        if (fp == NULL)
-            return 0;
-        buff = (char*)malloc(sizeof(buff)*255);
+        int nID, line_count = 1;
 
-        while(fgets(buff, 255, fp)) {
+        if (fp == NULL) return NULL;
+        buff = (char*) malloc(sizeof(char) * 255);
+
+        while(fgets(buff, 255, fp)) { // Start of FGETS
             while ((line = get_line(buff)) != NULL) {
                 buff += strlen(line);
-
-                if (sscanf(buff, ".I %d", &i) == 1)
-                    printf("\n%s -> It's an ID", buff);
-                else if (strstr(buff, ".T\0") != NULL)
-                    printf("\n%s -> It's a TITLE", buff);
-                else if (strstr(buff, ".A\0") != NULL)
-                    printf("\n%s -> It's an AUTHOR", buff);
-                else if (strstr(buff, ".B\0") != NULL)
-                    printf("\n%s -> It's the BIBLIOGRAPHY", buff);
-                else if (strstr(buff, ".W\0") != NULL)
-                    printf("\n%s -> It's the body", buff);
+                if (sscanf(line, ".I %d", &nID) == 1) {
+                    printf("\n%s -> It's an ID", line);
+                } else if (strstr(line, ".T") != NULL)
+                    printf("\n%s -> It's a TITLE", line);
+                else if (strstr(line, ".A") != NULL)
+                    printf("\n%s -> It's an AUTHOR", line);
+                else if (strstr(line, ".B") != NULL)
+                    printf("\n%s -> It's the BIBLIOGRAPHY", line);
+                else if (strstr(line, ".W") != NULL)
+                    printf("\n%s -> It's the body", line);
                 else {
-                    printf("\n----> %s", line);
+                    //replaceAlNum(line, ' ');
+                    printf("\n LINE: '%s'", line);
                     while ((aux = get_word(line)) != NULL) {
-                        printf("\n~~~~~> -%s-", aux);
                         line += strlen(aux) + 1;
-                        //getchar();
-                    }
+                        //printf("\nWORD: '%s'", aux);
+                        if (isStopWord(sw, aux) == FALSE) {
+                            ptrIndex->i_terms = prependTerm(ptrIndex->i_terms, aux);
+                        }
+                    } // End of word read
                 }
+                line_count++;
+            } // End of line read
+        }  // End of FGETS
 
-
-                printf("->buff: %s", buff);
-                getchar();
-            }
+        if (!fclose(fp)) {
+            printf("File closed - OK");
+        } else {
+            printf("File not closed - ERROR");
+            return NULL;
         }
-            /*
-            while(fscanf(fp, "%s", aux) > 0) {
-                cleanWord(aux);
-                isStopWord = FALSE;
-                for (i = 0; i < sw->count; i++) {
-                    if (strcmp(aux, sw->words[i]) == 0) {
-                        //printf("\n '%s' - '%s'", aux, sw->words[i]);
-                        isStopWord = TRUE;
-                    }
-                }
 
-                if (isStopWord == FALSE && strcmp(aux, "") != 0) {
-                    printf("\n ~> %s is not a StopWord!!", aux);
-                }
+        free(aux);
+        free(line);
 
-            }
-             */
-
-        //free(ptrIndex);
-        // Scan documents, extract values, index
-        //ptrIndex->i_term = (Term*)malloc(sizeof(ptrIndex->i_term));
-    //}
-    //}
+        return ptrIndex;
+    }
     return NULL;
 }
 
-static void cleanWord(char * word) {
-    unsigned long i = 0; /* Scanning index */
-    unsigned long x = 0; /* Write back index */
-
-    char c;
-    while ((c = word[i++]) != '\0') {
-        if (isalnum(c)) {
-            word[x++] = c;
+Bool isStopWord(StopWords * sw, char * word) {
+    int i;
+    for (i = 0; i < sw->count; i++) {
+        if (strcmp(word, sw->words[i]) == 0) {
+            return TRUE;
         }
     }
-    word[x] = '\0';
+    return FALSE;
+}
 
+void destroyIndex(Index ** index) {
+    Index * tmp;
+    tmp = *index;
+    dispose(tmp->i_terms);
+    free(tmp);
+    *index = NULL;
 }
