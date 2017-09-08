@@ -198,7 +198,7 @@ Bool isStopWord(StopWords * sw, char * word) {
 }
 
 void destroyIndex(Index ** index) {
-    Index * tmp;
+    Index *tmp;
     tmp = *index;
     dispose(tmp->i_terms);
     free(tmp);
