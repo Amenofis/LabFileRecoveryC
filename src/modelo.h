@@ -33,18 +33,18 @@ typedef struct {
     int d_EOD;
 } Document;
 
-typedef struct Term {
-    char * t_word;
+typedef struct S_Term {
+    char t_word[25];
     //Document ** document;
-    struct Term * next;
+    struct S_Term * next;
 } Term;
 
-typedef struct {
+typedef struct S_Index {
     int i_size;
     Term * i_terms;
 } Index;
 
-typedef struct {
+typedef struct S_StopWords {
     int count;
     char lang[2];
     char ** words;

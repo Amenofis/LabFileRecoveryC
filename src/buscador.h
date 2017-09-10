@@ -18,6 +18,6 @@ Bool isStopWord(StopWords * sw, char * word);
 
 Index * createIndex(char * pathDocumentsFile, StopWords * sw, code * statusCode);
 
-void destroyIndex(Index ** index);
+void destroyIndex(Index ** mIndex);
 
 #endif //LABFILERECOVERYC_BUSCADOR_H

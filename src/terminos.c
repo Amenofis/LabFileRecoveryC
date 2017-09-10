@@ -8,20 +8,20 @@
 #include "modelo.h"
 #include "terminos.h"
 
-Term * createTerm(char * word, Term * next) {
+Term * createTerm(char * word) {
     Term * new_term = malloc(sizeof(Term));
     if (new_term == NULL) {
         printf("Error creating new term.\n");
         exit(0);
     }
-    new_term->t_word = (char*) malloc(sizeof(char) * strlen(word));
+    //size_t length = strlen(word);
     strcpy(new_term->t_word, word);
-    new_term->next = next;
     return new_term;
 }
 
 Term * prependTerm(Term * head, char * word) {
-    Term * new_term = createTerm(word, head);
+    Term * new_term = createTerm(word);
+    new_term->next = head;
     head = new_term;
     return head;
 }

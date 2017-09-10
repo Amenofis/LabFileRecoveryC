@@ -5,7 +5,7 @@
 #ifndef LABFILERECOVERYC_TERMINOS_H
 #define LABFILERECOVERYC_TERMINOS_H
 
-Term * createTerm(char * word, Term * next);
+Term * createTerm(char * word);
 
 Term * prependTerm(Term * head, char * word);
 

@@ -3,9 +3,7 @@
 //
 
 #include <ctype.h>
-#include <string.h>
-#include <stdlib.h>
-#include <libio.h>
+#include <stdio.h>
 #include "utils.h"
 
 void cleanWord(char * word) {
@@ -56,9 +54,9 @@ char * get_word(char * line) {
         line++;
 
     char *s = line;
-    while(*line != ' ' && *line != '\0' && *line != '\n'){
+    while(*line != ' ' && *line != '\0' && *line != '\n')
         line++;
-    }
+
 
     if (*line == ' ' || *line == '\n') {
         *line = '\0';
