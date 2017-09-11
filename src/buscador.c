@@ -8,7 +8,7 @@
 #include "terminos.h"
 
 
-code status;
+code status = OK;
 StopWords *ptrStopWords = NULL;
 Index *ptrIndex = NULL;
 
@@ -78,21 +78,21 @@ StopWords * loadStopWords(char * pathStopWordsFile, code * statusCode) {
     printf("StopWords encontradas: %d\n", stopWordsCount);
 
     if (stopWordsCount > 0) {
-        StopWords *newStopWords = malloc(sizeof(StopWords));
+        StopWords * newStopWords = (StopWords*) malloc(sizeof(newStopWords));
         if (newStopWords == NULL) {
             printf("Error creating the StopWords\n");
             exit(0);
         }
 
         newStopWords->count = stopWordsCount;
-        newStopWords->words = malloc(sizeof(newStopWords->words) * stopWordsCount);
+        newStopWords->words = (char**) malloc(sizeof(char*) * stopWordsCount);
 
         if (newStopWords->words) {
             printf("Leyendo StopWords...\n");
             FILE *stopWordsFile = fopen(pathStopWordsFile, "r");
             char * buff = (char*) malloc(sizeof(char) * 20);
             int i = 0;
-            while(fgets(buff, 19, stopWordsFile)) {
+            while(fgets(buff, 20, stopWordsFile)) {
                 buff = get_line(buff);
                 size_t len = strlen(buff);
 
@@ -135,7 +135,7 @@ void destroyStopWords(StopWords **stopWords) {
 
 Index * createIndex(char * pathDocumentsFile, StopWords * sw, code * statusCode) {
 
-    Index * newIndex = malloc(sizeof(Index));
+    Index * newIndex = (Index*) malloc(sizeof(newIndex));
     //newIndex->i_terms = NULL;
     if (newIndex == NULL) {
         printf("Error creating the Index\n");
@@ -143,15 +143,16 @@ Index * createIndex(char * pathDocumentsFile, StopWords * sw, code * statusCode)
     }
 
     FILE *fp = fopen(pathDocumentsFile, "r");
-    char *word, *line, *buff;
+    char *word, *line, buffer[255], *ptrBuff;
     int nID, line_count = 1;
 
     if (fp == NULL) return NULL;
-    buff = (char*) malloc(sizeof(char) * 255);
+    //buff = (char*) malloc(sizeof(char) * 255);
 
-    while( fgets(buff, 254, fp) ) { // Start of FGETS
-        while ( (line = get_line(buff)) != NULL ) {
-            buff += strlen(line);
+    while( fgets(buffer, 254, fp) ) { // Start of FGETS
+        ptrBuff = buffer;
+        while ( (line = get_line(ptrBuff)) != NULL ) {
+            ptrBuff += strlen(line);
 
             if (sscanf(line, ".I %d", &nID) == 1) {
                 printf("%s -> It's an ID %d\n", line, nID);

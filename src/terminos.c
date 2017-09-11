@@ -41,7 +41,7 @@ void dispose(Term * head) {
         head->next = NULL;
         while (term != NULL) {
             tmp = term->next;
-            free(term->t_word);
+            //free(term->t_word);
             free(term);
             term = tmp;
         }
