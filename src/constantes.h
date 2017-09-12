@@ -5,6 +5,11 @@
 #define _CONSTANTES_H_
 
 typedef enum {FALSE, TRUE} Bool;
-typedef enum {OK, ERR_FILE_NOT_FOUND, ERR_FILE_NOT_PERM, IMPOSSIBLE_VALID_BOARD, NOT_ENOUGH_MEMORY} code;
+typedef enum {
+    OK,
+    ERR_FILE_NOT_FOUND,
+    ERR_FILE_NOT_PERM,
+    ERR_EMPTY_STOPWORDS,
+    NOT_ENOUGH_MEMORY} code;
 
 #endif

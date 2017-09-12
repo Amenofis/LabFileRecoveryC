@@ -1,27 +1,6 @@
 /*
- * Estructuras Propuestas
-
-typedef struct {
-....;
-....;
-} Index;
-
-typedef struct {
-....;
-....;
-} Result;
-
-typedef struct {
-....;
-....;
-} Ranking;
-
-typedef struct {
-....;
-....;
-} StopWords;
-
- *
+ * Created by Felipe Muñoz
+ * Modelo SRI
  */
 
 #ifndef _MODELO_H_
@@ -49,5 +28,16 @@ typedef struct S_StopWords {
     char lang[2];
     char ** words;
 } StopWords;
+
+typedef struct S_Result {
+    int ID, start, end, count;
+    struct S_Result * next;
+} Result;
+
+typedef struct S_Ranking {
+    int count;
+    char * query;
+    Result * result;
+} Ranking;
 
 #endif

@@ -1,5 +1,5 @@
 //
-// Created by ameno on 19-08-17.
+// Created by Felipe Muñoz on 19-08-17.
 //
 
 #include <ctype.h>
@@ -14,7 +14,6 @@ void cleanWord(char * word) {
     while ((c = word[i++]) != '\0')
         if (isalnum(c))
             word[x++] = c;
-    //word[x] = '\0';
 }
 
 void replaceAlNum(char * str, char r) {
@@ -28,8 +27,6 @@ void replaceAlNum(char * str, char r) {
         else
             str[x++] = r;
     }
-
-    //str[x] = '\0';
 }
 
 char * get_line(char * str) {
@@ -57,11 +54,21 @@ char * get_word(char * line) {
     while(*line != ' ' && *line != '\0' && *line != '\n')
         line++;
 
-
     if (*line == ' ' || *line == '\n') {
         *line = '\0';
         line++;
     }
-
     return s;
+}
+
+int countFileLines(char * pathToFile) {
+    FILE *fp = fopen(pathToFile, "r");
+    int lines = 0, ch = 0;
+    if (fp == NULL)
+        return 0;
+    lines++;
+    while((ch = fgetc(fp)) != EOF)
+        if(ch == '\n') lines++;
+    fclose(fp);
+    return lines;
 }
