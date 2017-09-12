@@ -45,24 +45,20 @@ int main(int argc, char* argv[]) {
                 }
                 break;
             case 3:
-                if (ptrIndex !=NULL) {
+                if (ptrIndex != NULL)
                     printTerms(ptrIndex->i_terms);
-                }
                 break;
             case 0:
                 if (ptrStopWords != NULL) {
                     destroyStopWords(&ptrStopWords);
-                    if (ptrStopWords == NULL) {
+                    if (ptrStopWords == NULL)
                         printf("StopWords destroyed\n");
-                    }
                 }
                 if (ptrIndex != NULL) {
                     destroyIndex(&ptrIndex);
-
                     if (ptrIndex == NULL)
                         printf("Index destroyed\n");
                 }
-                printf("Salir\n");
                 break;
             default:
                 break;
@@ -76,31 +72,30 @@ int main(int argc, char* argv[]) {
 StopWords * loadStopWords(char * pathStopWordsFile, code * statusCode) {
     int stopWordsCount = countFileLines(pathStopWordsFile);
     printf("StopWords encontradas: %d\n", stopWordsCount);
-
     if (stopWordsCount > 0) {
-        StopWords * newStopWords = (StopWords*) malloc(sizeof(newStopWords));
+        StopWords * newStopWords = malloc(sizeof(StopWords));
         if (newStopWords == NULL) {
             printf("Error creating the StopWords\n");
             exit(0);
         }
 
         newStopWords->count = stopWordsCount;
-        newStopWords->words = (char**) malloc(sizeof(char*) * stopWordsCount);
+        newStopWords->words = malloc(stopWordsCount * sizeof(char*));
 
         if (newStopWords->words) {
             printf("Leyendo StopWords...\n");
-            FILE *stopWordsFile = fopen(pathStopWordsFile, "r");
-            char * buff = (char*) malloc(sizeof(char) * 20);
+            FILE * stopWordsFile = fopen(pathStopWordsFile, "r");
+            char * buffer = (char*) malloc(sizeof(char) * 20);
             int i = 0;
-            while(fgets(buff, 20, stopWordsFile)) {
-                buff = get_line(buff);
-                size_t len = strlen(buff);
+            while(fgets(buffer, 20, stopWordsFile)) {
+                buffer = get_line(buffer);
+                size_t len = strlen(buffer);
 
-                newStopWords->words[i] = (char*) malloc(sizeof(char) * (len + 1));
-                strcpy(newStopWords->words[i], buff);
+                newStopWords->words[i] = (char*) malloc((len + 1) * sizeof(char));
+                strcpy(newStopWords->words[i], buffer);
                 i++;
             }
-            free(buff);
+            free(buffer);
             fclose(stopWordsFile);
 
             return newStopWords;
@@ -135,19 +130,21 @@ void destroyStopWords(StopWords **stopWords) {
 
 Index * createIndex(char * pathDocumentsFile, StopWords * sw, code * statusCode) {
 
-    Index * newIndex = (Index*) malloc(sizeof(newIndex));
-    //newIndex->i_terms = NULL;
-    if (newIndex == NULL) {
+    Index * new_index = (Index*) malloc(sizeof(Index));
+    if (new_index == NULL) {
         printf("Error creating the Index\n");
         exit(0);
     }
+    new_index->i_terms = NULL;
 
     FILE *fp = fopen(pathDocumentsFile, "r");
     char *word, *line, buffer[255], *ptrBuff;
     int nID, line_count = 1;
 
-    if (fp == NULL) return NULL;
-    //buff = (char*) malloc(sizeof(char) * 255);
+    if (fp == NULL) {
+        printf("Error opening the file\n");
+        exit(0);
+    }
 
     while( fgets(buffer, 254, fp) ) { // Start of FGETS
         ptrBuff = buffer;
@@ -174,9 +171,9 @@ Index * createIndex(char * pathDocumentsFile, StopWords * sw, code * statusCode)
                 //printf("\n LINE: '%s'", line);
                 while ((word = get_word(line)) != NULL) {
                     line += (strlen(word) + 1);
-                    //printf("\nWORD: '%s'", word);
                     if (isStopWord(sw, word) == FALSE && strlen(word) > 1) {
-                        newIndex->i_terms = prependTerm(newIndex->i_terms, word);
+                        printf("WORD: '%s'\n", word);
+                        new_index->i_terms = prependTerm(new_index->i_terms, word);
                     }
                 } // End of word read
             }
@@ -188,10 +185,10 @@ Index * createIndex(char * pathDocumentsFile, StopWords * sw, code * statusCode)
         printf("File closed - OK\n");
     } else {
         printf("File not closed - ERROR\n");
+        destroyIndex(&new_index);
         return NULL;
     }
-
-    return newIndex;
+    return new_index;
 }
 
 Bool isStopWord(StopWords * sw, char * word) {

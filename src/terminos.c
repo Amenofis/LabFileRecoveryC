@@ -6,7 +6,6 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include "modelo.h"
-#include "terminos.h"
 
 Term * createTerm(char * word) {
     Term * new_term = malloc(sizeof(Term));
@@ -14,7 +13,8 @@ Term * createTerm(char * word) {
         printf("Error creating new term.\n");
         exit(0);
     }
-    //size_t length = strlen(word);
+    size_t length = strlen(word);
+    new_term->t_word = (char*) malloc(sizeof(char) * (length + 1));
     strcpy(new_term->t_word, word);
     return new_term;
 }
@@ -29,7 +29,7 @@ Term * prependTerm(Term * head, char * word) {
 void printTerms(Term * head) {
     Term * current = head;
     while(current != NULL) {
-        printf("\n%s", current->t_word);
+        printf("%s\n", current->t_word);
         current = current->next;
     }
 }
@@ -41,7 +41,7 @@ void dispose(Term * head) {
         head->next = NULL;
         while (term != NULL) {
             tmp = term->next;
-            //free(term->t_word);
+            free(term->t_word);
             free(term);
             term = tmp;
         }

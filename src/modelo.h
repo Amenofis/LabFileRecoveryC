@@ -34,7 +34,7 @@ typedef struct {
 } Document;
 
 typedef struct S_Term {
-    char t_word[25];
+    char * t_word;
     //Document ** document;
     struct S_Term * next;
 } Term;
