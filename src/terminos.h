@@ -9,6 +9,12 @@ Term * createTerm(char * word);
 
 Term * prependTerm(Term * head, char * word);
 
+Term * searchTerm(Term * head, char * word);
+
+void saveTerms(FILE * fp, Term * head);
+
+Bool hasDocumentID(int id, Term * term);
+
 void printTerms(Term * head);
 
 void dispose(Term * head);

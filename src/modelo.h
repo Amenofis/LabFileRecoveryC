@@ -6,21 +6,25 @@
 #ifndef _MODELO_H_
 #define _MODELO_H_
 
-typedef struct {
+typedef struct S_Document {
     int d_id;
     int d_SOD;
     int d_EOD;
 } Document;
 
 typedef struct S_Term {
+    int t_docs_count;
+    int * t_docs;
     char * t_word;
-    //Document ** document;
     struct S_Term * next;
 } Term;
 
 typedef struct S_Index {
-    int i_size;
+    int i_id;
+    int i_terms_size;
+    int i_docs_size;
     Term * i_terms;
+    Document ** i_documents;
 } Index;
 
 typedef struct S_StopWords {
@@ -37,7 +41,7 @@ typedef struct S_Result {
 typedef struct S_Ranking {
     int count;
     char * query;
-    Result * result;
+    Result ** result;
 } Ranking;
 
 #endif

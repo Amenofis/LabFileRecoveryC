@@ -72,3 +72,15 @@ int countFileLines(char * pathToFile) {
     fclose(fp);
     return lines;
 }
+
+int countFileDocuments(char * pathToFile) {
+    FILE *fp = fopen(pathToFile, "r");
+    int docs = 0, docID;
+    char buffer[100];
+    if (fp == NULL)
+        return 0;
+    while (fgets(buffer, 99, fp))
+        if (sscanf(buffer, ".I %d", &docID) == 1) docs++;
+    fclose(fp);
+    return docs;
+}

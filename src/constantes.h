@@ -7,6 +7,7 @@
 typedef enum {FALSE, TRUE} Bool;
 typedef enum {
     OK,
+    INVALID_ARGUMENTS,
     ERR_FILE_NOT_FOUND,
     ERR_FILE_NOT_PERM,
     ERR_EMPTY_STOPWORDS,

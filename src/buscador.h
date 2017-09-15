@@ -12,6 +12,12 @@ StopWords * loadStopWords(char * pathStopWordsFile, code * statusCode);
 
 Index * createIndex(char * pathDocumentsFile, StopWords * sw, code * statusCode);
 
+void saveIndex(Index * i, int * id, code * statusCode);
+
+Index * loadIndex(int id, code * statusCode);
+
+Bool isFileHeader(char * str);
+
 Bool isStopWord(StopWords * sw, char * word);
 
 void showError(code statusCode);
