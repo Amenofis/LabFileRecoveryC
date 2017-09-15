@@ -7,6 +7,8 @@
 
 #include "constantes.h"
 
+void showError(code statusCode);
+
 void cleanWord(char * word);
 
 void replaceAlNum(char * str, char r);

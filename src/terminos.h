@@ -17,6 +17,6 @@ Bool hasDocumentID(int id, Term * term);
 
 void printTerms(Term * head);
 
-void dispose(Term * head);
+void disposeTerms(Term *head);
 
 #endif //LABFILERECOVERYC_TERMINOS_H

@@ -69,7 +69,7 @@ void printTerms(Term * head) {
     }
 }
 
-void dispose(Term * head) {
+void disposeTerms(Term *head) {
     Term *term, *tmp;
     if (head != NULL) {
         term = head->next;

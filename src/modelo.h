@@ -8,7 +8,7 @@
 
 typedef struct S_Document {
     int d_id;
-    int d_SOD;
+    long d_SOD;
     int d_EOD;
 } Document;
 
@@ -34,14 +34,18 @@ typedef struct S_StopWords {
 } StopWords;
 
 typedef struct S_Result {
-    int ID, start, end, count;
+    int r_id;
+    int r_count;
+    //char * r_word;
+    Document * r_document;
     struct S_Result * next;
 } Result;
 
 typedef struct S_Ranking {
-    int count;
-    char * query;
-    Result ** result;
+    int r_id;
+    int r_count;
+    char * r_query;
+    Result * r_results;
 } Ranking;
 
 #endif

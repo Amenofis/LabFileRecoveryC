@@ -4,7 +4,30 @@
 
 #include <ctype.h>
 #include <stdio.h>
+#include <string.h>
 #include "utils.h"
+
+/**
+ * showError
+ * Prints the error depending on the given statusCode value
+ * @param statusCode error enum
+ */
+void showError(code statusCode) {
+    switch (statusCode) {
+        case ERR_FILE_NOT_FOUND:
+            printf("Error archivo no encontrado\n");
+            break;
+        case ERR_FILE_NOT_PERM:
+            printf("Error abriendo/cerrando el archivo\n");
+            break;
+        case ERR_EMPTY_STOPWORDS:
+            printf("No se han encontrado StopWords\n");
+            break;
+        default:
+            printf("Error no definido\n");
+            break;
+    }
+}
 
 void cleanWord(char * word) {
     unsigned int i = 0; /* Scanning index */

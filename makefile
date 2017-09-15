@@ -9,8 +9,8 @@ EXEC_NAME = indexer
 
 debug: all
 
-all: createdirs $(ODIR)/utils.o $(ODIR)/terminos.o
-	$(CC) $(CFLAGS) $(ODIR)/utils.o $(ODIR)/terminos.o $(SRC)/buscador.c -o $(EXEC_NAME)
+all: createdirs $(ODIR)/utils.o $(ODIR)/resultados.o $(ODIR)/terminos.o
+	$(CC) $(CFLAGS) $(ODIR)/utils.o $(ODIR)/resultados.o $(ODIR)/terminos.o $(SRC)/buscador.c -o $(EXEC_NAME)
 
 createdirs:
 	mkdir -p $(ODIR)
@@ -21,6 +21,9 @@ $(ODIR)/utils.o: $(SRC)/utils.c $(SRC)/utils.h $(SRC)/modelo.h
 
 $(ODIR)/terminos.o: $(SRC)/terminos.c $(SRC)/terminos.h $(SRC)/modelo.h
 	$(CC) -g $(SRC)/terminos.c $(OPTIONS) -c -o $(ODIR)/terminos.o
+
+$(ODIR)/resultados.o: $(SRC)/resultados.c $(SRC)/resultados.h $(SRC)/modelo.h
+	$(CC) -g $(SRC)/resultados.c $(OPTIONS) -c -o $(ODIR)/resultados.o
 
 clean:
 	$(RM) $(ODIR) -r
