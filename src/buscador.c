@@ -394,7 +394,7 @@ Index * loadIndex(int id, code * statusCode) {
                 count++;
             } else {
                 int d = 0, i = 0;
-                char * dArr = malloc(sizeof(char) * 100);
+                char * dArr = malloc(sizeof(char) * 255);
                 sscanf(buffer, "%s %d %s", word, &d, dArr);
 
                 Term * term = prependTerm(loadedIndex->i_terms, word);
