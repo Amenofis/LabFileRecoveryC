@@ -14,5 +14,6 @@ Based on a given problem, regarding to the recuperation of information it was gi
 This repository holds the implementation using only the given resources by the course and one or another extra funcionality learned by research and investigation.
 
 
-Felipe Muñoz Montecinos
+
+Felipe Muñoz Montecinos <br>
 September 15th 2017
